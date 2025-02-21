@@ -1,20 +1,30 @@
 const express = require("express");
+const cors = require("cors"); // Import CORS
+
 const app = express();
+
+// Enable CORS for all requests
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://your-frontend-url.com"], // Update this with your frontend domain
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
 app.use(express.json());
 
-
-// Root route ("/") to show a welcome message
+// Root route ("/")
 app.get("/", (req, res) => {
   res.send("Welcome to the BFHL API! Use /bfhl for GET and POST requests.");
 });
 
-// GET /bfhl - Returns hardcoded operation code
+// GET /bfhl
 app.get("/bfhl", (req, res) => {
   res.status(200).json({ operation_code: 1 });
 });
 
-// POST /bfhl - Process input and return expected response
+// POST /bfhl
 app.post("/bfhl", (req, res) => {
   try {
     if (!req.body || !Array.isArray(req.body.data)) {
@@ -31,10 +41,8 @@ app.post("/bfhl", (req, res) => {
 
     for (const item of data) {
       if (/^\d+$/.test(item)) {
-        // Check if it's a number
         numbers.push(item);
       } else if (typeof item === "string" && item.length === 1 && isNaN(item)) {
-        // Check if it's a single alphabet character
         alphabets.push(item);
         if (
           !highest_alphabet ||
