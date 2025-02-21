@@ -3,14 +3,6 @@ const app = express();
 
 app.use(express.json());
 
-const cors = require("cors");
-app.use(
-  cors({
-    origin: "*", // ✅ Allow requests from all origins (for testing)
-    methods: ["GET", "POST"], // ✅ Allow only GET and POST methods
-    allowedHeaders: ["Content-Type"], // ✅ Allow only Content-Type header
-  })
-);
 
 // Root route ("/") to show a welcome message
 app.get("/", (req, res) => {
