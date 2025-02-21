@@ -3,6 +3,12 @@ const app = express();
 
 app.use(express.json());
 
+// Root route ("/") to show a welcome message
+app.get("/", (req, res) => {
+  res.send("Welcome to the BFHL API! Use /bfhl for GET and POST requests.");
+});
+
+// GET and POST for /bfhl
 app
   .route("/bfhl")
   .get((req, res) => {
@@ -31,7 +37,7 @@ app
     res.json({
       is_success: true,
       user_id: "angelmalhotra",
-      email: "22BCS50197@cuchd.in",
+      email: "s22BCS50197@cuchd.in",
       roll_number: "22BCS50197",
       numbers: numbers,
       alphabets: alphabets,
@@ -39,6 +45,7 @@ app
     });
   });
 
+// Start server
 const port = process.env.PORT || 10000;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
