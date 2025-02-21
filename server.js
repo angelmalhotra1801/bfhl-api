@@ -8,22 +8,32 @@ app.get("/", (req, res) => {
   res.send("Welcome to the BFHL API! Use /bfhl for GET and POST requests.");
 });
 
-// GET and POST for /bfhl
-app
-  .route("/bfhl")
-  .get((req, res) => {
-    res.status(200).json({ operation_code: 1 });
-  })
-  .post((req, res) => {
-    const data = req.body.data || [];
+// GET /bfhl - Returns hardcoded operation code
+app.get("/bfhl", (req, res) => {
+  res.status(200).json({ operation_code: 1 });
+});
+
+// POST /bfhl - Process input and return expected response
+app.post("/bfhl", (req, res) => {
+  try {
+    if (!req.body || !Array.isArray(req.body.data)) {
+      return res.status(400).json({
+        is_success: false,
+        message: "Invalid input. 'data' must be an array.",
+      });
+    }
+
+    const data = req.body.data;
     const numbers = [];
     const alphabets = [];
     let highest_alphabet = "";
 
     for (const item of data) {
-      if (!isNaN(item)) {
+      if (/^\d+$/.test(item)) {
+        // Check if it's a number
         numbers.push(item);
-      } else if (item.length === 1 && isNaN(item)) {
+      } else if (typeof item === "string" && item.length === 1 && isNaN(item)) {
+        // Check if it's a single alphabet character
         alphabets.push(item);
         if (
           !highest_alphabet ||
@@ -34,16 +44,22 @@ app
       }
     }
 
-    res.json({
+    res.status(200).json({
       is_success: true,
-      user_id: "angelmalhotra",
-      email: "s22BCS50197@cuchd.in",
+      user_id: "angelmalhotra_18012005",
+      email: "22BCS50197@cuchd.in",
       roll_number: "22BCS50197",
       numbers: numbers,
       alphabets: alphabets,
       highest_alphabet: highest_alphabet ? [highest_alphabet] : [],
     });
-  });
+  } catch (error) {
+    res.status(500).json({
+      is_success: false,
+      message: "Internal Server Error",
+    });
+  }
+});
 
 // Start server
 const port = process.env.PORT || 10000;
