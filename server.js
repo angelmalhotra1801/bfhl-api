@@ -6,7 +6,7 @@ const app = express();
 // Enable CORS for all requests
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://your-frontend-url.com"], // Update this with your frontend domain
+    origin: "https://bfhl-frontend-7sng.onrender.com",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
   })
@@ -26,6 +26,14 @@ app.get("/bfhl", (req, res) => {
 
 // POST /bfhl
 app.post("/bfhl", (req, res) => {
+  // Add CORS headers manually
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://bfhl-frontend-7sng.onrender.com"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
   try {
     if (!req.body || !Array.isArray(req.body.data)) {
       return res.status(400).json({
